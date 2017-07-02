@@ -250,7 +250,13 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
     Vector3 nodePos = node_->GetWorldPosition();
     Vector3 nodeAngle = node_->GetWorldRotation().EulerAngles();
 
-    while (Abs(nodeAngle.x_) < maxClimbAngle_ && !contacts.IsEof())
+    // angle doesn't change while in this function
+    if (Abs(nodeAngle.x_) > maxClimbAngle_)
+    {
+        return;
+    }
+
+    while (!contacts.IsEof())
     {
         Vector3 contactPosition = contacts.ReadVector3();
         Vector3 contactNormal = contacts.ReadVector3();
