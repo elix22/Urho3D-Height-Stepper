@@ -16,7 +16,7 @@ Configurables:
 * minStepHeight_ - minimum height of an object that you can step over (deault = 0.08).
 * maxClimbAngle_ - maximum climb angle (default = 40 degrees).
 * applyImpulseToChar_ - whether the stepper should apply impulse to the character when it detects a steppable object (default = true).
-* charStepUpDuration_ - the time it takes for character to step up the height, smaller the value, higher the impulse (default = 0.25), applicable if applyImpulseToChar_ is set to true.
+* charStepUpDuration_ - the time it takes for character to step up the height, smaller the value, higher the impulse (default = 0.10), applicable if applyImpulseToChar_ is set to true.
 
 To Build
 -----------------------------------------------------------------------------------
