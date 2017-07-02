@@ -43,6 +43,7 @@
 HeightStepper::HeightStepper(Context* context)
     : LogicComponent(context)
     , minStepHeight_(0.08f)
+    , maxStepHeight_(0.30f)
     , maxClimbAngle_(40.0f)
     , minStepNormal_(0.5f)
     , applyImpulseToChar_(true)
@@ -269,7 +270,7 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
         float stepHeight = Vector3::UP.DotProduct(segL);
 
         // this avoids garbage data below char's foot
-        if (stepHeight < minStepHeight_)
+        if (stepHeight < minStepHeight_ || stepHeight > maxStepHeight_)
         {
             continue;
         }

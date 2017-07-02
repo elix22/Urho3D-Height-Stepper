@@ -14,6 +14,7 @@ Screenshots
 Configurables:
 -----------------------------------------------------------------------------------
 * minStepHeight_ - minimum height of an object that you can step over (deault = 0.08).
+* maxStepHeight_ - maximum height of an object that you can step over (deault = 0.30).
 * maxClimbAngle_ - maximum climb angle (default = 40 degrees).
 * minStepNormal_ - minimum surface normal that the character can step onto (default = 0.5).
 * applyImpulseToChar_ - whether the stepper should apply impulse to the character when it detects a steppable object (default = true).
