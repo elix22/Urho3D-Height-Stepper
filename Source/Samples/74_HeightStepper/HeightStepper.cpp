@@ -276,7 +276,7 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
         }
 
         // skip unsteppable contact normals
-        if (Abs(Vector3::UP.DotProduct(contactNormal)) < minStepNormal_)
+        if (Vector3::UP.DotProduct(contactNormal) < minStepNormal_)
         {
             continue;
         }
