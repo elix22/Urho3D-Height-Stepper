@@ -63,6 +63,7 @@ protected:
     // attrib configurable
     float               minStepHeight_;
     float               maxClimbAngle_;
+    float               minStepNormal_;
     bool                applyImpulseToChar_;
     float               charStepUpDuration_;
 

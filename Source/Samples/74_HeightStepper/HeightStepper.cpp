@@ -44,6 +44,7 @@ HeightStepper::HeightStepper(Context* context)
     : LogicComponent(context)
     , minStepHeight_(0.08f)
     , maxClimbAngle_(40.0f)
+    , minStepNormal_(0.5f)
     , applyImpulseToChar_(true)
     , charStepUpDuration_(0.10f)
     , nodePlacementPos_(Vector3(0.0f, -0.01f, -0.05f))
@@ -269,6 +270,12 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
 
         // this avoids garbage data below char's foot
         if (stepHeight < minStepHeight_)
+        {
+            continue;
+        }
+
+        // skip unsteppable contact normals
+        if (Abs(Vector3::UP.DotProduct(contactNormal)) < minStepNormal_)
         {
             continue;
         }
