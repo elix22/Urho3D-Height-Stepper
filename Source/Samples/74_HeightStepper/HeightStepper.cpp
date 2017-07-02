@@ -50,7 +50,7 @@ HeightStepper::HeightStepper(Context* context)
     , restLookAtPos_(Vector3(0.0f, 2.0f, 1.0f))
     , stepState_(StepState_Idle)
 {
-    SetUpdateEventMask(USE_FIXEDUPDATE);
+    SetUpdateEventMask(0);
 }
 
 void HeightStepper::RegisterObject(Context* context)
@@ -109,6 +109,7 @@ bool HeightStepper::AddStepper(Node *charNode, Node *footNode, const Vector3& wa
 
     // walker active
     SetSolid(false);
+    SetUpdateEventMask(USE_FIXEDUPDATE);
 
     return true;
 }
@@ -249,7 +250,7 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
     Vector3 nodePos = node_->GetWorldPosition();
     Vector3 nodeAngle = node_->GetWorldRotation().EulerAngles();
 
-    while (!contacts.IsEof())
+    while (Abs(nodeAngle.x_) < maxClimbAngle_ && !contacts.IsEof())
     {
         Vector3 contactPosition = contacts.ReadVector3();
         Vector3 contactNormal = contacts.ReadVector3();
@@ -262,11 +263,6 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
 
         // this avoids garbage data below char's foot
         if (stepHeight < minStepHeight_)
-        {
-            continue;
-        }
-
-        if (Abs(nodeAngle.x_) > maxClimbAngle_)
         {
             continue;
         }
