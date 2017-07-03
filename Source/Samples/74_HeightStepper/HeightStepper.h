@@ -46,12 +46,14 @@ public:
     virtual void Start();
     virtual void FixedUpdate(float timeStep);
     
-    bool AddStepper(Node *charNode, Node *footNode, const Vector3& walkerScale, bool useDbgMaterial=false);
+    bool AddStepper(Node *charNode, const Vector3& walkerScale);
     bool IsSolid() const;
 
+    bool StepperEnable(bool enable);
+    bool GetStepperEnabled() const;
+
     // dbg
-    void ToggleStepper(bool enable);
-    void ToggleDbgTexture(bool enable);
+    void EnableStepper(bool enable);
     RigidBody* GetStepperRigidBody() const { return stepperBody_; }
     RigidBody* GetSolidRigidBody() const { return solidBody_; }
 
@@ -70,8 +72,6 @@ protected:
 
     // character nodes
     WeakPtr<Node>       charNode_;
-    WeakPtr<Node>       footNode_;
-    Vector3             prevFootPos_;
 
     // walker
     WeakPtr<Node>       stepperNode_;
@@ -79,11 +79,15 @@ protected:
     WeakPtr<RigidBody>  stepperBody_;
     WeakPtr<RigidBody>  solidBody_;
 
+    // public for debugging purpose
+public:
+    Vector3             stepHeightPos_;
+    float               stepHeightLen_;
+protected:
+
     Vector3             nodePlacementPos_;
-    Vector3             restLookAtPos_;
     unsigned            stepState_;
-    bool                footInfront_;
 
 private:
-    enum StepState { StepState_Idle, StepState_Solid, StepState_WaitFwd };
+    enum StepState { StepState_Disabled, StepState_Idle, StepState_Solid };
 };

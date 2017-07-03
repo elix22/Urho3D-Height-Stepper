@@ -123,10 +123,8 @@ private:
     //dbg 
     Timer debounceTimer_;
     bool testMode_;
-    bool testMode2_;
     bool drawDebug_;
 
     WeakPtr<HeightStepper> stepper1;
-    WeakPtr<HeightStepper> stepper2;
     Text* steppertext_;
 };

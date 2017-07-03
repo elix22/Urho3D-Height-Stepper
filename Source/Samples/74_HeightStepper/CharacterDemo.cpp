@@ -63,8 +63,7 @@ CharacterDemo::CharacterDemo(Context* context) :
     Sample(context),
     drawDebug_(false),
     firstPerson_(false),
-    testMode_(true),
-    testMode2_(true)
+    testMode_(true)
 {
     // Register factory and attributes for the Character component so it can be created via CreateComponent, and loaded / saved
     Character::RegisterObject(context);
@@ -207,21 +206,9 @@ void CharacterDemo::CreateCharacter()
     character_->controls_.yaw_ = euA.y_;
 
     // stepper
-    Node *foot = objectNode->GetChild("RightToeBase", true);
-    if (foot)
-    {
-        Node *stepperNode = scene_->CreateChild("stepperParentR");
-        stepper1 = stepperNode->CreateComponent<HeightStepper>();
-        stepper1->AddStepper(objectNode, foot, Vector3(0.4f, 1.0f, 0.8f), true);
-    }
-
-    foot = objectNode->GetChild("LeftToeBase", true);
-    if (foot)
-    {
-        Node *stepperNode = scene_->CreateChild("stepperParentL");
-        stepper2 = stepperNode->CreateComponent<HeightStepper>();
-        stepper2->AddStepper(objectNode, foot, Vector3(0.4f, 1.0f, 0.8f), true);
-    }
+    Node *stepperNode = scene_->CreateChild("stepperParentL");
+    stepper1 = stepperNode->CreateComponent<HeightStepper>();
+    stepper1->AddStepper(objectNode, Vector3(0.4f, 1.0f, 0.8f));
 }
 
 void CharacterDemo::CreateInstructions()
@@ -232,7 +219,7 @@ void CharacterDemo::CreateInstructions()
     // Construct new Text object, set string to display and font to use
     Text* instructionText = ui->GetRoot()->CreateChild<Text>();
     instructionText->SetText(
-        "Q-toggle dbg textures, E-toggle steppers, F-1st person, F5-dbg"
+        "E-toggle steppers, F-toggle 1st person, F5-dbg col"
     //    "Space to jump, F to toggle 1st/3rd person\n"
     //    "F5 to save scene, F7 to load"
     );
@@ -339,27 +326,16 @@ void CharacterDemo::HandleUpdate(StringHash eventType, VariantMap& eventData)
         }
     }
 
-    if (input->GetKeyPress(KEY_Q))
-    {
-        if (debounceTimer_.GetMSec(false) > 250)
-        {
-            testMode2_ = !testMode2_;
-
-            stepper1->ToggleDbgTexture(testMode2_);
-            stepper2->ToggleDbgTexture(testMode2_);
-
-            debounceTimer_.Reset();
-        }
-    }
-
     if (input->GetKeyPress(KEY_E))
     {
         if (debounceTimer_.GetMSec(false) > 250)
         {
             testMode_ = !testMode_;
 
-            stepper1->ToggleStepper(testMode_);
-            stepper2->ToggleStepper(testMode_);
+            if (stepper1)
+            {
+                stepper1->EnableStepper(testMode_);
+            }
 
             debounceTimer_.Reset();
         }
@@ -413,10 +389,12 @@ void CharacterDemo::HandlePostUpdate(StringHash eventType, VariantMap& eventData
     if (drawDebug_)
     {
         DebugRenderer *dbgRenderer = scene_->GetComponent<DebugRenderer>();
-        stepper1->GetStepperRigidBody()->DrawDebugGeometry(dbgRenderer, true);
-        stepper1->GetSolidRigidBody()->DrawDebugGeometry(dbgRenderer, true);
-        stepper2->GetStepperRigidBody()->DrawDebugGeometry(dbgRenderer, true);
-        stepper2->GetSolidRigidBody()->DrawDebugGeometry(dbgRenderer, true);
+        if (stepper1 && testMode_)
+        {
+            stepper1->GetStepperRigidBody()->DrawDebugGeometry(dbgRenderer, true);
+            stepper1->GetSolidRigidBody()->DrawDebugGeometry(dbgRenderer, true);
+            dbgRenderer->AddSphere(Sphere(stepper1->stepHeightPos_, 0.1f), Color::MAGENTA, false);
+        }
     }
 }
 
