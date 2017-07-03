@@ -83,6 +83,7 @@ protected:
 public:
     Vector3             stepHeightPos_;
     float               stepHeightLen_;
+    Vector3             charPosAtHit_;
 protected:
 
     Vector3             nodePlacementPos_;

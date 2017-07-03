@@ -66,6 +66,7 @@ bool HeightStepper::AddStepper(Node *charNode, const Vector3& walkerScale)
 
     // create
     stepperNode_ = node_->CreateChild("stepperNode");
+
     // reduce the step-up slope by moving the col shape a tad behind char's foot
     const float walkerZBackPosition = 0.48f;
     float boxHeight = 0.4f;
@@ -160,6 +161,12 @@ void HeightStepper::FixedUpdate(float timeStep)
         Vector3 charToSH = (stepHeightPos_ - charPos);
         float distToChar = charToSH.Length();
 
+        // wait for the char to move away from it
+        if ((charPosAtHit_ - charPos).Length() < 0.5f)
+        {
+            return;
+        }
+
         // if walking off in another direction
         if (charDir.DotProduct(charToSH.Normalized()) < 0.7f)
         {
@@ -170,7 +177,7 @@ void HeightStepper::FixedUpdate(float timeStep)
         }
 
         // if the char is getting away from it
-        if (distToChar > stepHeightLen_ * 1.01f)
+        if (distToChar > stepHeightLen_ * 1.2f)
         {
             SetSolid(false);
         
@@ -185,7 +192,6 @@ void HeightStepper::FixedUpdate(float timeStep)
     stepHeightPos_ = charPos;
     node_->SetWorldPosition(charPos + charRot * nodePlacementPos_);
     node_->SetWorldRotation(charRot);
-
 }
 
 void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventData)
@@ -246,7 +252,8 @@ void HeightStepper::HandleNodeCollision(StringHash eventType, VariantMap& eventD
         float fwdSegL = node_->GetWorldDirection().DotProduct(segL);
         stepHeightPos_ = node_->GetWorldPosition() + node_->GetWorldRotation() * Vector3(0.0f, highestPt, fwdSegL);
         Vector3 charPos = charNode_->GetWorldPosition();
-        stepHeightLen_ = (charPos - nodePlacementPos_).Length();
+        charPosAtHit_ = charPos;
+        stepHeightLen_ = (charPos - stepHeightPos_).Length();
 
         node_->LookAt(stepHeightPos_);
 
