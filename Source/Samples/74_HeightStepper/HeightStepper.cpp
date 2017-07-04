@@ -113,12 +113,10 @@ void HeightStepper::SetSolid(bool solid)
     if (solid)
     {
         solidNode_->SetEnabled(true);
-        stepperNode_->SetEnabled(false);
     }
     else
     {
         solidNode_->SetEnabled(false);
-        stepperNode_->SetEnabled(true);
     }
 }
 
@@ -131,16 +129,15 @@ void HeightStepper::EnableStepper(bool enable)
 {
     if (enable)
     {
-        stepperNode_->SetEnabled(true);
-        solidNode_->SetEnabled(false);
         stepState_ = StepState_Idle;
     }
     else
     {
-        stepperNode_->SetEnabled(false);
-        solidNode_->SetEnabled(false);
         stepState_ = StepState_Disabled;
     }
+
+    // regardless of whatever state it was in, just start over
+    solidNode_->SetEnabled(false);
 }
 
 bool HeightStepper::GetStepperEnabled() const

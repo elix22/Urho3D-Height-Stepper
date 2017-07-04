@@ -389,11 +389,14 @@ void CharacterDemo::HandlePostUpdate(StringHash eventType, VariantMap& eventData
     if (drawDebug_)
     {
         DebugRenderer *dbgRenderer = scene_->GetComponent<DebugRenderer>();
-        if (stepper1 && testMode_)
+        if (stepper1)
         {
             stepper1->GetStepperRigidBody()->DrawDebugGeometry(dbgRenderer, true);
             stepper1->GetSolidRigidBody()->DrawDebugGeometry(dbgRenderer, true);
-            dbgRenderer->AddSphere(Sphere(stepper1->stepHeightPos_, 0.1f), Color::MAGENTA, false);
+            if (testMode_)
+            {
+                dbgRenderer->AddSphere(Sphere(stepper1->stepHeightPos_, 0.1f), Color::MAGENTA, false);
+            }
         }
     }
 }
